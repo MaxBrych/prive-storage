@@ -9,31 +9,35 @@ import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
 
 export const metadata: Metadata = {
-	title: "Irys Provenance Toolkit",
-	description: "UI toolkit to kickstart your next projet",
+  title: "Irys Provenance Toolkit",
+  description: "UI toolkit to kickstart your next projet",
 };
 
 const roboto = Roboto({
-	weight: "400",
-	subsets: ["latin"],
-	display: "swap",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({
-	subsets: ["latin"],
-	display: "swap",
+  subsets: ["latin"],
+  display: "swap",
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-	const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
 
-	return (
-		<html lang="en" className={`${roboto.className} bg-background relative`}>
-			<body className={roboto.className}>
-				<Navbar />
-				{children}
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en" className={`${roboto.className} bg-background relative`}>
+      <body className={roboto.className}>
+        <Navbar />
+        {children}
+      </body>
+    </html>
+  );
 }
