@@ -1,5 +1,7 @@
 import React from "react";
 import FundWithdraw from "../components/FundWithdraw";
+import UploadForm from "../components/UploadForm";
+import MetadataList from "../components/MetadataList";
 
 export default function Dashboard() {
   return (
@@ -9,7 +11,11 @@ export default function Dashboard() {
           <h1 className="text-2xl">Logo</h1>
           <FundWithdraw node="https://node1.irys.xyz" currency="matic" />
         </div>
-        <div className="w-full"> Dashboard</div>
+        <div className="flex flex-col w-full gap-6">
+          {" "}
+          <UploadForm />
+          <MetadataList />
+        </div>
       </div>
       <div></div>
     </div>
