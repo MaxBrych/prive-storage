@@ -1,25 +1,33 @@
 "use client";
 // app/components/NFTForm.tsx
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { uploadMetadata } from "../utils/uploadMetadata";
 import TipTap from "./Editor/TipTap";
 import Tiptap from "./Editor/TipTap";
 import { useRef } from "react";
 
 export const UploadForm = () => {
-  const editorRef = (useRef < { getHTML: () => string }) | (null > null);
+  const editorRef = useRef<{ getHTML: () => string } | null>(null);
 
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("" || undefined);
   const [metadataUrl, setMetadataUrl] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    // Get the description from the editor
+    const description = editorRef.current?.getHTML() || "";
+
     const metadata = { name, description, image };
     const url = await uploadMetadata(metadata);
-    setMetadataUrl(url); // Update the state with the new URL
-    console.log("Metadata uploaded with URL:", url);
+    if (url) {
+      // Only call setMetadataUrl if url is defined.
+      setMetadataUrl(url);
+      console.log("Metadata uploaded with URL:", url);
+    } else {
+      console.error("Failed to upload metadata");
+    }
   };
 
   return (
@@ -32,16 +40,13 @@ export const UploadForm = () => {
           placeholder="Name"
           className="w-full p-2 border rounded"
         />
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
-          className="w-full p-2 border rounded"
-        />
-        <TipTap />
+
+        <TipTap ref={editorRef} />
         <input
           type="file"
-          onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
+          onChange={(e: any) =>
+            setImage(e.target.files ? e.target.files[0] : null)
+          }
           className="w-full p-2 border rounded"
         />
 
