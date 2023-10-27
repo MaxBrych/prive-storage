@@ -38,7 +38,7 @@ export const UploadForm = () => {
           placeholder="Description"
           className="w-full p-2 border rounded"
         />
-        <TipTap ref={editorRef} />
+        <TipTap />
         <input
           type="file"
           onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
