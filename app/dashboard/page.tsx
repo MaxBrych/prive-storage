@@ -2,6 +2,8 @@ import React from "react";
 import FundWithdraw from "../components/FundWithdraw";
 import UploadForm from "../components/UploadForm";
 import MetadataList from "../components/MetadataList";
+import GasslessUploader from "../components/GasslessUploader";
+import UploadModal from "../components/UploadModal";
 
 export default function Dashboard() {
   return (
@@ -11,13 +13,11 @@ export default function Dashboard() {
           <h1 className="text-2xl">Logo</h1>
           <FundWithdraw node="https://node1.irys.xyz" currency="matic" />
         </div>
-        <div className="flex flex-col w-full gap-6">
-          {" "}
-          <UploadForm />
-          <MetadataList />
-        </div>
+        <div className="flex flex-col w-full gap-6"> </div>
       </div>
-      <div></div>
+      <div>
+        <UploadModal />{" "}
+      </div>
     </div>
   );
 }
