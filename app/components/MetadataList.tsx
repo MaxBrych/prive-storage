@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { queryMetadata } from "../utils/queryMetadata";
 import { MetadataEntry } from "../utils/types";
+import MetadataEntryComponent from "./MetadataEntry";
 
 const MetadataList = () => {
   const [metadataEntries, setMetadataEntries] = useState<MetadataEntry[]>([]);
@@ -18,7 +19,7 @@ const MetadataList = () => {
     };
     fetchMetadata();
   }, []);
-
+  console.log(metadataEntries);
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -26,11 +27,7 @@ const MetadataList = () => {
   return (
     <div className="metadata-list">
       {metadataEntries.map((entry, index) => (
-        <div key={index} className="metadata-entry">
-          <p>Name: {entry.name}</p>
-          <p>Description: {entry.description}</p>
-          {/* ...other fields you want to display */}
-        </div>
+        <MetadataEntryComponent key={index} {...entry} />
       ))}
     </div>
   );

@@ -7,25 +7,45 @@ export interface MetadataEntry {
 }
 
 export const queryMetadata = async (): Promise<MetadataEntry[] | undefined> => {
+  async function fetchFileContent(transactionId: string) {
+    try {
+      const response = await fetch(`https://node1.irys.xyz/${transactionId}`);
+      if (!response.ok) {
+        throw new Error(`Network response was not ok ${response.statusText}`);
+      }
+      const fileContent = await response.json(); // assuming the file content is in JSON format
+      return fileContent;
+    } catch (error) {
+      console.error(
+        "There has been a problem with your fetch operation:",
+        error
+      );
+    }
+  }
+
   const myQuery = new Query();
   try {
     const results = await myQuery
       .search("irys:transactions")
       .tags([{ name: "AppName", values: ["Prive"] }])
-      .limit(20); // Adjust limit as needed
+      .limit(20);
+    console.log(results);
 
-    // Map the results to your MetadataEntry structure
-    return results.map((result) => {
-      const nameTag = result.tags.find((tag) => tag.name === "name");
-      const descriptionTag = result.tags.find(
-        (tag) => tag.name === "description"
-      );
-      return {
-        name: nameTag ? nameTag.value : "",
-        description: descriptionTag ? descriptionTag.value : "",
-        // ... other fields you expect to receive
-      };
-    });
+    const metadataEntries = await Promise.all(
+      results.map(async (result) => {
+        const fileContent = await fetchFileContent(result.id); // assume fetchFileContent is a function to get the file content
+        return {
+          id: result.id,
+          timestamp: result.timestamp,
+          address: result.address,
+          name: fileContent.name,
+          description: fileContent.description,
+          image: fileContent.image,
+        };
+      })
+    );
+
+    return metadataEntries;
   } catch (e) {
     console.error("Error querying metadata ", e);
     return [];

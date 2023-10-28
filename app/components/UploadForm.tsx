@@ -10,8 +10,21 @@ export const UploadForm = () => {
   const editorRef = useRef<{ getHTML: () => string } | null>(null);
 
   const [name, setName] = useState("");
-  const [image, setImage] = useState("" || undefined);
+  const [image, setImage] = useState<string | null>(null);
   const [metadataUrl, setMetadataUrl] = useState("");
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImage(null);
+    }
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -44,9 +57,7 @@ export const UploadForm = () => {
         <TipTap ref={editorRef} />
         <input
           type="file"
-          onChange={(e: any) =>
-            setImage(e.target.files ? e.target.files[0] : null)
-          }
+          onChange={handleFileChange}
           className="w-full p-2 border rounded"
         />
 
