@@ -5,7 +5,7 @@ import { uploadFiles } from "../../utils/uploadFiles";
 
 import { useRef } from "react";
 
-export const UploadFiles = () => {
+export const UploadFiles = (props: any) => {
   const editorRef = useRef<{ getHTML: () => string } | null>(null);
 
   const [name, setName] = useState("");
@@ -37,6 +37,7 @@ export const UploadFiles = () => {
       // Only call setMetadataUrl if url is defined.
       setMetadataUrl(url);
       console.log("Metadata uploaded with URL:", url);
+      props.onUploadComplete();
     } else {
       console.error("Failed to upload metadata");
     }

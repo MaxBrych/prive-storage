@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,7 @@ export type Files = {
   amount: number;
   status: "pending" | "processing" | "success" | "failed";
   name: string;
+  image: string;
 };
 
 export const columns: ColumnDef<Files>[] = [
@@ -45,6 +47,7 @@ export const columns: ColumnDef<Files>[] = [
     id: "actions",
     cell: ({ row }) => {
       const file = row.original;
+      const router = useRouter();
 
       return (
         <DropdownMenu>
@@ -62,7 +65,13 @@ export const columns: ColumnDef<Files>[] = [
               Copy Content-ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                router.push(` https://gateway.irys.xyz/${file.id}`)
+              }
+            >
+              View Image
+            </DropdownMenuItem>
             <DropdownMenuItem>View Content details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 
 import { DataTable } from "./data-table";
 import { Files, columns } from "./columns";
@@ -9,13 +10,25 @@ import { queryFiles } from "../utils/queryFiles";
 
 async function getData(): Promise<Files[]> {
   const results = await queryFiles();
-
-  // Fetch data from your API here.
   return results;
 }
 
-export default async function Dashboard() {
-  const data = await getData();
+export default function Dashboard() {
+  const [refreshData, setRefreshData] = useState(false);
+  const [data, setData] = useState<Files[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const results = await getData();
+      setData(results);
+    }
+
+    fetchData();
+  }, [refreshData]);
+
+  const handleUploadComplete = () => {
+    setRefreshData(!refreshData); // Toggle refreshData to trigger a re-fetch
+  };
 
   return (
     <div className="flex flex-col-reverse items-center justify-center gap-10 py-10 mx-auto bg-white text-text md:flex-row">
@@ -23,7 +36,7 @@ export default async function Dashboard() {
         <Sidebar />
       </div>
       <div className="flex flex-col items-start justify-start w-full px-4 md:px-8">
-        <UploadFiles />
+        <UploadFiles onUploadComplete={handleUploadComplete} />
         {/*<FilesList />*/}
         <DataTable columns={columns} data={data} />
       </div>
