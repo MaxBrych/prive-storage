@@ -16,7 +16,7 @@ export default function UploadModal() {
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center">
+      <div className="inset-0 flex items-center justify-center flex-shrink-0 ">
         <button
           type="button"
           onClick={openModal}

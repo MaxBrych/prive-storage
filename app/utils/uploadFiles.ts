@@ -1,10 +1,9 @@
-// utils/uploadMetadata.ts
 import getIrys from "./getIrys";
 import * as fs from "fs/promises";
 
-export const uploadMetadata = async (metadata: any) => {
+export const uploadFiles = async (files: any) => {
   const irys = await getIrys();
-  const fileToUpload = new Blob([JSON.stringify(metadata)], {
+  const fileToUpload = new Blob([JSON.stringify(files)], {
     type: "application/json",
   });
   const file = new File([fileToUpload], "metadata.json", {
@@ -14,7 +13,7 @@ export const uploadMetadata = async (metadata: any) => {
   // Add the AppName tag along with the Content-Type tag
   const tags = [
     { name: "Content-Type", value: "application/json" },
-    { name: "AppName", value: "Prive" },
+    { name: "AppName", value: "PriveStorage" },
   ];
 
   try {
