@@ -1,7 +1,7 @@
 import getIrys from "./getIrys";
 import * as fs from "fs/promises";
 
-export const uploadFiles = async (files: any) => {
+export const uploadFiles = async (files: any, address: string) => {
   const irys = await getIrys();
   const fileToUpload = new Blob([JSON.stringify(files)], {
     type: "application/json",
@@ -14,6 +14,7 @@ export const uploadFiles = async (files: any) => {
   const tags = [
     { name: "Content-Type", value: "application/json" },
     { name: "AppName", value: "PriveStorage" },
+    { name: "address", value: address },
   ];
 
   try {

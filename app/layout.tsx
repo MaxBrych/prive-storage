@@ -7,6 +7,7 @@ import { Inter, Roboto } from "next/font/google";
 
 import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
+import { Providers } from "./components/Providers";
 
 export const metadata: Metadata = {
   title: "Irys Provenance Toolkit",
@@ -35,8 +36,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${roboto.className} bg-background relative`}>
       <body className={roboto.className}>
-        <Navbar />
-        {children}
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );

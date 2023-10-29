@@ -1,11 +1,12 @@
-// utils/queryMetadata.ts
 import Query from "@irys/query";
 export interface MetadataEntry {
   image: string;
   name: string;
 }
 
-export const queryFiles = async (): Promise<MetadataEntry[] | any> => {
+export const queryFiles = async (
+  address: string
+): Promise<MetadataEntry[] | any> => {
   async function fetchFileContent(transactionId: string) {
     try {
       const response = await fetch(`https://node1.irys.xyz/${transactionId}`);
@@ -26,7 +27,10 @@ export const queryFiles = async (): Promise<MetadataEntry[] | any> => {
   try {
     const results = await myQuery
       .search("irys:transactions")
-      .tags([{ name: "AppName", values: ["PriveStorage"] }])
+      .tags([
+        { name: "AppName", values: ["PriveStorage"] },
+        { name: "address", values: [address] },
+      ])
       .limit(20);
     console.log(results);
 

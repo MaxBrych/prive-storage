@@ -2,12 +2,12 @@
 // app/components/NFTForm.tsx
 import React, { ChangeEvent, useState } from "react";
 import { uploadFiles } from "../../utils/uploadFiles";
-
+import { useAddress } from "@thirdweb-dev/react";
 import { useRef } from "react";
 
 export const UploadFiles = (props: any) => {
   const editorRef = useRef<{ getHTML: () => string } | null>(null);
-
+  const address = useAddress();
   const [name, setName] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [metadataUrl, setMetadataUrl] = useState("");
@@ -30,16 +30,21 @@ export const UploadFiles = (props: any) => {
 
     // Get the description from the editor
     const description = editorRef.current?.getHTML() || "";
-
-    const metadata = { name, description, image };
-    const url = await uploadFiles(metadata);
-    if (url) {
-      // Only call setMetadataUrl if url is defined.
-      setMetadataUrl(url);
-      console.log("Metadata uploaded with URL:", url);
-      props.onUploadComplete();
+    if (address) {
+      // Check if address is defined
+      const metadata = { name, description, image };
+      const url = await uploadFiles(metadata, address);
+      if (url) {
+        // Only call setMetadataUrl if url is defined.
+        setMetadataUrl(url);
+        console.log("Metadata uploaded with URL:", url);
+        props.onUploadComplete();
+      } else {
+        console.error("Failed to upload metadata");
+      }
     } else {
-      console.error("Failed to upload metadata");
+      console.error("No wallet address available");
+      <p>Please connect your wallet to upload files.</p>;
     }
   };
 
