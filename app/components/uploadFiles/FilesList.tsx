@@ -4,13 +4,13 @@ import { queryFiles } from "../../utils/queryFiles";
 import { MetadataEntry } from "../../utils/types";
 import MetadataEntryComponent from "./FileEntry";
 
-const FilesList = () => {
+const FilesList = (address: string) => {
   const [metadataEntries, setMetadataEntries] = useState<MetadataEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMetadata = async () => {
-      const results = await queryFiles();
+      const results = await queryFiles(address);
       if (results) {
         // Check if results is defined before calling setMetadataEntries
         setMetadataEntries(results);
