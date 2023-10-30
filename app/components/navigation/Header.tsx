@@ -1,3 +1,4 @@
+"use client";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import { ArrowUpRight, Menu } from "lucide-react";
 import Link from "next/link";
@@ -34,17 +35,7 @@ export default function Header() {
               theme={"light"}
             />
           </div>
-          <div className="hidden lg:flex lg:gap-x-12">
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-sm font-semibold leading-6 text-gray-900"
-              >
-                {item.name}
-              </a>
-            ))}
-          </div>
+
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <Link
               href="/dashboard"
