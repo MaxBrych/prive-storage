@@ -1,5 +1,6 @@
 import Image from "next/image";
 import UploadFiles from "./components/uploadFiles/UploadFile";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -24,6 +25,13 @@ export default function Home() {
             lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
             fugiat aliqua.
           </p>
+          <Link
+            href="/dashboard"
+            className="h-10 px-6 text-blue-600 bg-blue-100 rounded-md"
+          >
+            {" "}
+            Dashboard
+          </Link>
         </div>
       </div>
 
