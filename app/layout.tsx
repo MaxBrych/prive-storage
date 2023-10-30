@@ -8,10 +8,11 @@ import { Inter, Roboto } from "next/font/google";
 import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
 import { Providers } from "./components/Providers";
+import Header from "./components/navigation/Header";
 
 export const metadata: Metadata = {
-  title: "Irys Provenance Toolkit",
-  description: "UI toolkit to kickstart your next projet",
+  title: "DeTransfer",
+  description: "Transfer files on-chain",
 };
 
 const roboto = Roboto({
@@ -34,10 +35,11 @@ export default function RootLayout({
   const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
 
   return (
-    <html lang="en" className={`${roboto.className} bg-background relative`}>
-      <body className={roboto.className}>
+    <html lang="en" className={`${inter.className} bg-background relative`}>
+      <body className={inter.className}>
         <Providers>
-          <Navbar />
+          {/*<Navbar />*/}
+          <Header />
           {children}
         </Providers>
       </body>

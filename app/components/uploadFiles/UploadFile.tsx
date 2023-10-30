@@ -4,6 +4,7 @@ import React, { ChangeEvent, useState } from "react";
 import { uploadFiles } from "../../utils/uploadFiles";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRef } from "react";
+import Link from "next/link";
 
 export const UploadFiles = (props: any) => {
   const editorRef = useRef<{ getHTML: () => string } | null>(null);
@@ -50,7 +51,10 @@ export const UploadFiles = (props: any) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="p-4 space-y-4 bg-white border rounded-lg border-zinc-100"
+      >
         <input
           type="text"
           value={name}
@@ -62,28 +66,37 @@ export const UploadFiles = (props: any) => {
         <input
           type="file"
           onChange={handleFileChange}
-          className="w-full p-2 border rounded"
+          className="flex flex-col items-center justify-center w-full h-40 p-2 border border-dashed rounded-lg cursor-pointer"
+          placeholder="."
         />
 
         <button
           type="submit"
-          className="px-4 py-2 text-white bg-blue-500 rounded"
+          className="w-full px-4 py-2 text-white bg-blue-500 rounded-md"
         >
           Upload
         </button>
       </form>
       <div className="metadata-url-display">
         {metadataUrl && (
-          <p>
-            Metadata uploaded at:{" "}
-            <a
-              href={`https://gateway.irys.xyz/${metadataUrl}`}
-              target="_blank"
-              rel="noopener noreferrer"
+          <>
+            <p>
+              Metadata uploaded at:{" "}
+              <a
+                href={`https://gateway.irys.xyz/${metadataUrl}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                https://gateway.irys.xyz/{metadataUrl}
+              </a>
+            </p>
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 text-blue-500 rounded-md bg-slate-100"
             >
-              https://gateway.irys.xyz/{metadataUrl}
-            </a>
-          </p>
+              View in Dashboard{" "}
+            </Link>
+          </>
         )}
       </div>
     </>

@@ -156,7 +156,7 @@ export const FundWithdraw: React.FC<FundWithdrawConfigProps> = ({
   };
 
   return (
-    <div className="w-full p-5 bg-white border rounded-lg shadow-xl">
+    <div className="w-full p-5 bg-white border rounded-xl border-zinc-100 ">
       {!node && (
         <Select
           className="mb-4"

@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 
 import React from "react";
 import Link from "next/link";
+import UploadModal from "../components/uploadFiles/UploadModal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,15 +59,16 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center w-full py-4">
+      <div className="flex items-center justify-between w-full py-4">
         <Input
           placeholder="Filter names..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-xs"
         />
+        <UploadModal />
       </div>
       <div className="w-full border rounded-md">
         <Table>
