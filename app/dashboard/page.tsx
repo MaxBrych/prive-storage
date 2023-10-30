@@ -40,7 +40,7 @@ export default function Dashboard() {
       <div className="hidden md:flex md:flex-col ">
         <Sidebar />
       </div>
-      <div className="flex flex-col items-start justify-start w-full px-4 md:px-8">
+      <div className="flex flex-col items-start justify-start w-full px-4 pt-20 md:px-8">
         {/*<FilesList />*/}
         <DataTable columns={columns} data={data} />
       </div>
