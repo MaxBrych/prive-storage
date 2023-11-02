@@ -20,8 +20,9 @@ export default function Header() {
           aria-label="Global"
         >
           <div className="flex lg:flex-1">
-            <Link href="/" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5 flex flex-row gap-3">
               <Logo />
+              <h1 className="text-xl font-medium">Storage</h1>
             </Link>
           </div>
           <div className="flex lg:hidden">

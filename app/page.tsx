@@ -9,8 +9,11 @@ export default function Home() {
       <div className="w-full px-4 py-32 mx-auto md:px-8 md:max-w-1/2 sm:py-48 lg:py-56">
         <div className="hidden sm:mb-8 sm:flex sm:justify-start">
           <div className="relative px-3 py-1 text-sm leading-6 text-gray-600 rounded-full ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-            Announcing our next round of funding.{" "}
-            <a href="#" className="font-semibold text-indigo-600">
+            Store files with provanance on Iry.{" "}
+            <a
+              href="https://irys.xyz/"
+              className="font-semibold text-indigo-600"
+            >
               <span className="absolute inset-0" aria-hidden="true" />
               Read more <span aria-hidden="true">&rarr;</span>
             </a>
@@ -18,16 +21,15 @@ export default function Home() {
         </div>
         <div className="text-start">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Decentralized Self Souverin Data Storage
+            Decentralized Permanent Data Storage
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-            lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
-            fugiat aliqua.
+            Store your data on arweave with a provenance and permanent
+            avalability
           </p>
           <Link
             href="/dashboard"
-            className="h-10 px-6 text-blue-600 bg-blue-100 rounded-md"
+            className="flex flex-col items-center justify-center h-10 px-6 py-3 text-blue-600 bg-blue-100 rounded-md"
           >
             {" "}
             Dashboard
