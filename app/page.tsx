@@ -1,6 +1,7 @@
 import Image from "next/image";
 import UploadFiles from "./components/uploadFiles/UploadFile";
 import Link from "next/link";
+import { UploadTabs } from "./components/UploadTabs";
 
 export default function Home() {
   return (
@@ -23,13 +24,13 @@ export default function Home() {
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             Decentralized Permanent Data Storage
           </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
+          <p className="mt-6 mb-4 text-lg leading-8 text-gray-600">
             Store your data on arweave with a provenance and permanent
             avalability
           </p>
           <Link
             href="/dashboard"
-            className="flex flex-col items-center justify-center h-10 px-6 py-3 text-blue-600 bg-blue-100 rounded-md"
+            className="inline-block h-10 px-6 py-3 text-blue-600 bg-blue-100 rounded-md hover:bg-blue-200"
           >
             {" "}
             Dashboard
@@ -39,7 +40,10 @@ export default function Home() {
 
       {/* Right Column*/}
       <div className="flex flex-col items-center justify-center w-full md:min-h-screen md:max-w-1/2">
-        <UploadFiles />
+        {/*  <UploadFiles /> */}
+        <div className="">
+          <UploadTabs />
+        </div>
       </div>
     </div>
   );

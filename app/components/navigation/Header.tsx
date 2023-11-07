@@ -20,9 +20,12 @@ export default function Header() {
           aria-label="Global"
         >
           <div className="flex lg:flex-1">
-            <Link href="/" className="-m-1.5 p-1.5 flex flex-row gap-3">
+            <Link
+              href="/"
+              className="-m-1.5 p-1.5 flex flex-row justify-center items-center gap-2"
+            >
               <Logo />
-              <h1 className="text-xl font-medium">Storage</h1>
+              <h1 className="text-xl font-semibold text-center">Storage</h1>
             </Link>
           </div>
           <div className="flex lg:hidden">
@@ -41,9 +44,9 @@ export default function Header() {
             <Link
               href="/dashboard"
               type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+              className="-m-2.5 inline-flex items-center gap-2 rounded-full px-2 bg-zinc-100 justify-center text-sm py-2.5 text-gray-700"
             >
-              <span className="text-black sr-only">Dashboard</span>
+              Dashboard
               <ArrowUpRight className="w-6 h-6" aria-hidden="true" />
             </Link>
           </div>
