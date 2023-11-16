@@ -6,9 +6,11 @@ import { PiReceiptLight } from "react-icons/pi";
 import Button from "./Button";
 import ReceiptJSONView from "./ReceiptJSONView";
 import Spinner from "./Spinner";
+import UploadViewer from "./UploadViewer";
 import Switch from "react-switch";
 import fileReaderStream from "filereader-stream";
 import { fundAndUpload } from "../utils/fundAndUpload";
+import { encryptAndUploadFile } from "../utils/lit";
 
 import getIrys from "../utils/getIrys";
 import { useCallback } from "react";
@@ -19,246 +21,286 @@ import { useState } from "react";
 
 // Define the Tag type
 type Tag = {
-	name: string;
-	value: string;
+  name: string;
+  value: string;
 };
 
 interface FileWrapper {
-	file: File;
-	isUploaded: boolean;
-	id: string;
-	previewUrl: string;
-	loadingReceipt: boolean;
+  file: File;
+  isUploaded: boolean;
+  id: string;
+  previewURL: string;
+  loadingReceipt: boolean;
 }
 
 interface UploaderConfigProps {
-	showImageView?: boolean;
-	showReceiptView?: boolean;
+  showImageView?: boolean;
+  showReceiptView?: boolean;
+  encryptData?: boolean;
 }
 
-export const Uploader: React.FC<UploaderConfigProps> = ({ showImageView = true, showReceiptView = true }) => {
-	const [files, setFiles] = useState<FileWrapper[]>([]);
-	const [selectedFile, setSelectedFile] = useState<File | null>(null);
-	const [previewURL, setPreviewURL] = useState<string>("");
-	const [receipt, setReceipt] = useState<string>("");
-	const [receiptQueryProcessing, setReceiptQueryProcessing] = useState<boolean>(false);
-	const [txProcessing, setTxProcessing] = useState(false);
-	const [message, setMessage] = useState<string>("");
+export const Uploader: React.FC<UploaderConfigProps> = ({
+  showImageView = true,
+  showReceiptView = true,
+  encryptData = false,
+}) => {
+  const [files, setFiles] = useState<FileWrapper[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewURL, setPreviewURL] = useState<string>("");
+  const [receipt, setReceipt] = useState<string>("");
+  const [receiptQueryProcessing, setReceiptQueryProcessing] =
+    useState<boolean>(false);
+  const [txProcessing, setTxProcessing] = useState(false);
+  const [message, setMessage] = useState<string>("");
 
-	const GATEWAY_BASE = "https://gateway.irys.xyz/"; // Set to the base URL of any gateway
+  const GATEWAY_BASE = (
+    process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/"
+  ).endsWith("/")
+    ? process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/"
+    : (process.env.NEXT_PUBLIC_GATEWAY || "https://gateway.irys.xyz/") + "/";
 
-	useEffect(() => {
-		setMessage("");
-	}, []);
+  useEffect(() => {
+    setMessage("");
+  }, []);
 
-	const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (event.target.files) {
-			const files = Array.from(event.target.files);
-			const newUploadedFiles: FileWrapper[] = files.map((file) => ({
-				file,
-				isUploaded: false,
-				id: "",
-				previewUrl: "",
-				loadingReceipt: false,
-			}));
-			setFiles(newUploadedFiles);
-		}
-	};
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const files = Array.from(event.target.files);
+      const newUploadedFiles: FileWrapper[] = files.map((file) => ({
+        file,
+        isUploaded: false,
+        id: "",
+        previewURL: "",
+        loadingReceipt: false,
+      }));
+      setFiles(newUploadedFiles);
+    }
+  };
 
-	const resetFilesAndOpenFileDialog = useCallback(() => {
-		setFiles([]);
-		setReceipt("");
-		setPreviewURL("");
-		const input = document.querySelector('input[type="file"]') as HTMLInputElement;
-		if (input) {
-			input.click();
-		}
-	}, []);
+  const resetFilesAndOpenFileDialog = useCallback(() => {
+    setFiles([]);
+    setReceipt("");
+    setPreviewURL("");
+    const input = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+    if (input) {
+      input.click();
+    }
+  }, []);
 
-	const handleUpload = async () => {
-		setMessage("");
+  const handleUpload = async () => {
+    setMessage("");
 
-		if (!files || files.length === 0) {
-			setMessage("Please select a file first");
-			return;
-		}
-		setTxProcessing(true);
-		const irys = await getIrys();
+    if (!files || files.length === 0) {
+      setMessage("Please select a file first");
+      return;
+    }
+    setTxProcessing(true);
 
-		// If more than one file is selected, then all files are wrapped together and uploaded in a single tx
-		if (files.length > 1) {
-			try {
-				// Remove the File objects from the FileWrapper objects
-				const filesToUpload: File[] = files.map((file) => file.file);
-				console.log("Multi-file upload");
-				const [manifestId, receiptId] = await fundAndUpload(filesToUpload, []);
-				console.log(`Upload success manifestId=${manifestId} receiptId=${receiptId}`);
-				// Now that the upload is done, update the FileWrapper objects with the preview URL
-				const updatedFiles = files.map((file) => ({
-					...file,
-					id: receiptId,
-					isUploaded: true,
-					previewUrl: GATEWAY_BASE + manifestId + "/" + file.file.name,
-				}));
-				setFiles(updatedFiles);
-			} catch (e) {
-				console.log("Error on upload: ", e);
-			}
-		} else {
-			console.log("Single file upload");
-			// This occurs when exactly one file is selected
-			try {
-				for (const file of files) {
-					const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
-					const uploadedTx = await fundAndUpload(file.file, tags);
-					file.id = uploadedTx;
-					file.isUploaded = true;
-					file.previewUrl = GATEWAY_BASE + uploadedTx;
-				}
-			} catch (e) {
-				console.log("Error on upload: ", e);
-			}
-		}
-		setTxProcessing(false);
-	};
+    if (encryptData) {
+      const uploadedTx = await encryptAndUploadFile(files[0].file);
+      files[0].id = uploadedTx;
+      files[0].isUploaded = true;
+      files[0].previewURL = uploadedTx;
+      setTxProcessing(false);
+      return;
+    }
 
-	//	const showReceipt = async (fileIndex: number) => {
-	const showReceipt = async (fileIndex: number, receiptId: string) => {
-		let updatedFiles = [...files];
-		updatedFiles[fileIndex].loadingReceipt = true;
-		setFiles(updatedFiles);
-		try {
-			const irys = await getIrys();
-			const receipt = await irys.utils.getReceipt(receiptId);
-			setReceipt(JSON.stringify(receipt));
-			setPreviewURL(""); // Only show one or the other
-		} catch (e) {
-			console.log("Error fetching receipt: " + e);
-		}
-		// For some reason we need to reset updatedFiles, probably a React state timing thing.
-		updatedFiles = [...files];
-		updatedFiles[fileIndex].loadingReceipt = false;
-		setFiles(updatedFiles);
-	};
+    // If more than one file is selected, then all files are wrapped together and uploaded in a single tx
+    if (files.length > 1) {
+      try {
+        // Remove the File objects from the FileWrapper objects
+        const filesToUpload: File[] = files.map((file) => file.file);
+        console.log("Multi-file upload");
+        const [manifestId, receiptId] = await fundAndUpload(filesToUpload, []);
+        console.log(
+          `Upload success manifestId=${manifestId} receiptId=${receiptId}`
+        );
+        // Now that the upload is done, update the FileWrapper objects with the preview URL
+        const updatedFiles = files.map((file) => ({
+          ...file,
+          id: receiptId,
+          isUploaded: true,
+          previewURL: manifestId + "/" + file.file.name,
+        }));
+        setFiles(updatedFiles);
+      } catch (e) {
+        console.log("Error on upload: ", e);
+      }
+    } else {
+      console.log("Single file upload");
+      // This occurs when exactly one file is selected
+      try {
+        for (const file of files) {
+          const tags: Tag[] = [{ name: "Content-Type", value: file.file.type }];
+          const uploadedTx = await fundAndUpload(file.file, tags);
+          file.id = uploadedTx;
+          file.isUploaded = true;
+          file.previewURL = uploadedTx;
+        }
+      } catch (e) {
+        console.log("Error on upload: ", e);
+      }
+    }
+    setTxProcessing(false);
+  };
 
-	// Display only the last selected file's preview.
-	const memoizedPreviewURL = useMemo(() => {
-		if (previewURL) {
-			return (
-				<div>
-					<img
-						className="w-full h-full rounded-xl resize-none bg-primary object-cover"
-						src={previewURL}
-						alt="Thumbnail"
-					/>
-				</div>
-			);
-		}
-		return null;
-	}, [previewURL]);
+  //	const showReceipt = async (fileIndex: number) => {
+  const showReceipt = async (fileIndex: number, receiptId: string) => {
+    let updatedFiles = [...files];
+    updatedFiles[fileIndex].loadingReceipt = true;
+    setFiles(updatedFiles);
+    try {
+      const irys = await getIrys();
+      const receipt = await irys.utils.getReceipt(receiptId);
+      setReceipt(JSON.stringify(receipt));
+      setPreviewURL(""); // Only show one or the other
+    } catch (e) {
+      console.log("Error fetching receipt: " + e);
+    }
+    // For some reason we need to reset updatedFiles, probably a React state timing thing.
+    updatedFiles = [...files];
+    updatedFiles[fileIndex].loadingReceipt = false;
+    setFiles(updatedFiles);
+  };
 
-	// Display only the receipt JSON when available.
-	const memoizedReceiptView = useMemo(() => {
-		console.log("memoizedReceiptView called");
-		if (receipt && !previewURL) {
-			return (
-				<div className="w-full">
-					<ReceiptJSONView data={receipt} />
-				</div>
-			);
-		}
-		return null;
-	}, [receipt, previewURL]);
+  // Display only the last selected file's preview.
+  const memoizedPreviewURL = useMemo(() => {
+    if (previewURL) {
+      return (
+        <UploadViewer previewURL={previewURL} checkEncrypted={encryptData} />
+      );
+    }
+    return null;
+  }, [previewURL]);
 
-	return (
-		<div className={`bg-white rounded-lg border shadow-2xl mx-auto min-w-full`}>
-			<div className="flex p-5">
-				<div className={`space-y-6 ${memoizedPreviewURL && memoizedReceiptView ? "w-1/2" : "w-full"}`}>
-					<div
-						className="border-2 border-dashed bg-[#EEF0F6]/60 border-[#EEF0F6] rounded-lg p-4 text-center"
-						onDragOver={(event) => event.preventDefault()}
-						onDrop={(event) => {
-							event.preventDefault();
-							const droppedFiles = Array.from(event.dataTransfer.files);
-							const newUploadedFiles: FileWrapper[] = droppedFiles.map((file) => ({
-								file,
-								isUploaded: false,
-								id: "",
-								previewUrl: "",
-								loadingReceipt: false,
-							}));
-							setFiles(newUploadedFiles);
-						}}
-					>
-						<p className="text-gray-400 mb-2">Drag and drop files here</p>
-						<input type="file" multiple onChange={handleFileUpload} className="hidden" />
-						<button
-							onClick={resetFilesAndOpenFileDialog}
-							className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
-								txProcessing ? "bg-[#DBDEE9] cursor-not-allowed" : "hover:bg-[#DBDEE9] hover:font-bold"
-							}`}
-							disabled={txProcessing}
-						>
-							{txProcessing ? <Spinner color="text-background" /> : "Browse Files"}
-						</button>
-					</div>
-					{files.length > 0 && (
-						<div className="flex flex-col space-y-2">
-							{files.map((file, index) => (
-								<div key={index} className="flex items-center justify-start mb-2">
-									<span className="mr-2 text-text">{file.file.name}</span>
-									{file.isUploaded && (
-										<>
-											<span className="ml-auto">
-												{showImageView && (
-													<button
-														className="p-2 h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
-														onClick={() => setPreviewURL(file.previewUrl)}
-													>
-														<AiOutlineFileSearch className="white-2xl" />
-													</button>
-												)}
-											</span>
+  // Display only the receipt JSON when available.
+  const memoizedReceiptView = useMemo(() => {
+    console.log("memoizedReceiptView called");
+    if (receipt && !previewURL) {
+      return (
+        <div className="w-full">
+          <ReceiptJSONView data={receipt} />
+        </div>
+      );
+    }
+    return null;
+  }, [receipt, previewURL]);
 
-											<span className="ml-2">
-												{showReceiptView && (
-													<button
-														className="p-2  h-10 font-xs bg-black rounded-full text-white w-10 flex items-center justify-center transition-colors duration-500 ease-in-out hover:text-white"
-														onClick={() => showReceipt(index, file.id)}
-													>
-														{file.loadingReceipt ? (
-															<Spinner color="text-background" />
-														) : (
-															<PiReceiptLight className="text-2xl" />
-														)}
-													</button>
-												)}
-											</span>
-										</>
-									)}
-								</div>
-							))}
-						</div>
-					)}
+  return (
+    <div className={`bg-white rounded-lg border shadow-2xl mx-auto min-w-full`}>
+      <div className="flex p-5">
+        <div
+          className={`space-y-6 ${
+            memoizedPreviewURL && memoizedReceiptView ? "w-1/2" : "w-full"
+          }`}
+        >
+          <div
+            className="border-2 border-dashed bg-[#EEF0F6]/60 border-[#EEF0F6] rounded-lg p-4 text-center"
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => {
+              event.preventDefault();
+              const droppedFiles = Array.from(event.dataTransfer.files);
+              const newUploadedFiles: FileWrapper[] = droppedFiles.map(
+                (file) => ({
+                  file,
+                  isUploaded: false,
+                  id: "",
+                  previewURL: "",
+                  loadingReceipt: false,
+                })
+              );
+              setFiles(newUploadedFiles);
+            }}
+          >
+            <p className="mb-2 text-gray-400">Drag and drop files here</p>
+            <input
+              type="file"
+              multiple
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <button
+              onClick={resetFilesAndOpenFileDialog}
+              className={`w-full min-w-full py-2 px-4 bg-[#DBDEE9] text-text font-bold rounded-md flex items-center justify-center transition-colors duration-500 ease-in-out  ${
+                txProcessing
+                  ? "bg-[#DBDEE9] cursor-not-allowed"
+                  : "hover:bg-[#DBDEE9] hover:font-bold"
+              }`}
+              disabled={txProcessing}
+            >
+              {txProcessing ? (
+                <Spinner color="text-background" />
+              ) : (
+                "Browse Files"
+              )}
+            </button>
+          </div>
+          {files.length > 0 && (
+            <div className="flex flex-col space-y-2">
+              {files.map((file, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-start mb-2"
+                >
+                  <span className="mr-2 text-text">{file.file.name}</span>
+                  {file.isUploaded && (
+                    <>
+                      <span className="ml-auto">
+                        {showImageView && (
+                          <button
+                            className="flex items-center justify-center w-10 h-10 p-2 text-white transition-colors duration-500 ease-in-out bg-black rounded-full font-xs hover:text-white"
+                            onClick={() => setPreviewURL(file.previewURL)}
+                          >
+                            <AiOutlineFileSearch className="white-2xl" />
+                          </button>
+                        )}
+                      </span>
 
-					{memoizedReceiptView && (
-						<div className="h-56 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
-							{memoizedReceiptView}
-						</div>
-					)}
-					{memoizedPreviewURL && (
-						<div className="h-96 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
-							{memoizedPreviewURL}
-						</div>
-					)}
+                      <span className="ml-2">
+                        {showReceiptView && (
+                          <button
+                            className="flex items-center justify-center w-10 h-10 p-2 text-white transition-colors duration-500 ease-in-out bg-black rounded-full font-xs hover:text-white"
+                            onClick={() => showReceipt(index, file.id)}
+                          >
+                            {file.loadingReceipt ? (
+                              <Spinner color="text-background" />
+                            ) : (
+                              <PiReceiptLight className="text-2xl" />
+                            )}
+                          </button>
+                        )}
+                      </span>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
-					<Button onClick={handleUpload} disabled={txProcessing}>
-						{txProcessing ? <Spinner color="text-background" /> : "Upload"}
-					</Button>
-				</div>
-			</div>
-		</div>
-	);
+          {memoizedReceiptView && (
+            <div className="h-56 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
+              {memoizedReceiptView}
+            </div>
+          )}
+          {memoizedPreviewURL && (
+            <div className="h-56 flex justify-center space-y-4 bg-[#EEF0F6]/60 rounded-xl overflow-auto">
+              {memoizedPreviewURL}
+            </div>
+          )}
+
+          <Button
+            onClick={handleUpload}
+            disabled={txProcessing}
+            requireLitAuth={encryptData}
+          >
+            {txProcessing ? <Spinner color="text-background" /> : "Upload"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Uploader;
