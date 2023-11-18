@@ -2,7 +2,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import GasslessUploader from "../GasslessUploader";
-import UploadFiles from "./UploadFile";
+import UploadFiles from "./UploadFileEncrypted";
 import { Files, columns } from "../../dashboard/columns";
 import { useAddress } from "@thirdweb-dev/react";
 import { queryFiles } from "@/app/utils/queryFiles";
