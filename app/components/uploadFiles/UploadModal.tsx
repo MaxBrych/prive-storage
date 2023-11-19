@@ -6,6 +6,7 @@ import UploadFiles from "./UploadFileEncrypted";
 import { Files, columns } from "../../dashboard/columns";
 import { useAddress } from "@thirdweb-dev/react";
 import { queryFiles } from "@/app/utils/queryFiles";
+import { UploadTabs } from "../UploadTabs";
 
 async function getData(address: string): Promise<Files[]> {
   const results = await queryFiles(address);
@@ -81,7 +82,7 @@ export default function UploadModal() {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                  <UploadFiles onUploadComplete={handleUploadComplete} />
+                  <UploadTabs />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

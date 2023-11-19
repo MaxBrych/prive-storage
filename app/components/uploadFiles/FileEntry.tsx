@@ -33,11 +33,11 @@ export default function FileEntry({
 
   return (
     <div className="text-xs">
-      <p>ID: {id}</p>
+      {/*<p>ID: {id}</p>*/}
       <p>Name: {name}</p>
       <p>Description: {description}</p>
-      <p>Timestamp: {timestamp}</p>
-      <p>Address: {address}</p>
+      {/*  <p>Timestamp: {timestamp}</p>*/}
+      {/*<p>Address: {address}</p> */}
       {encrypted && !isDecrypted ? (
         <button
           onClick={handleDecrypt}

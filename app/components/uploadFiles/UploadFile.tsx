@@ -72,7 +72,7 @@ export const UploadFiles = (props: any) => {
 
         <button
           type="submit"
-          className="w-full px-4 py-2 text-white bg-blue-500 rounded-md"
+          className="w-full px-4 py-2 text-white bg-black rounded-md"
         >
           Upload
         </button>
@@ -92,7 +92,7 @@ export const UploadFiles = (props: any) => {
             </p>
             <Link
               href="/dashboard"
-              className="px-4 py-2 text-blue-500 rounded-md bg-slate-100"
+              className="px-4 py-2 rounded-md text-zinc-300 bg-slate-100"
             >
               View in Dashboard{" "}
             </Link>

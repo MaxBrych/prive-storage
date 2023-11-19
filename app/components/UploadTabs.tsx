@@ -11,51 +11,41 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UploadFiles from "./uploadFiles/UploadFile";
+import UploadFilesEncrypted from "./uploadFiles/UploadFileEncrypted";
 
 export function UploadTabs() {
   return (
     <Tabs defaultValue="account" className="w-[400px]">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="account">File</TabsTrigger>
-        <TabsTrigger value="password">Folder</TabsTrigger>
+        <TabsTrigger value="account">Public</TabsTrigger>
+        <TabsTrigger value="password">Private</TabsTrigger>
       </TabsList>
       <TabsContent value="account">
         <Card>
           <CardHeader>
-            <CardTitle>Account</CardTitle>
+            <CardTitle>Sharable</CardTitle>
             <CardDescription>
-              Make changes to your account here. Click save when you're done.
+              Everyone can see and access this file.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <UploadFiles />
           </CardContent>
-          <CardFooter>
-            <Button>Save changes</Button>
-          </CardFooter>
+          <CardFooter></CardFooter>
         </Card>
       </TabsContent>
       <TabsContent value="password">
         <Card>
           <CardHeader>
-            <CardTitle>Password</CardTitle>
+            <CardTitle>Encrypted Upload</CardTitle>
             <CardDescription>
-              Change your password here. After saving, you'll be logged out.
+              Only you can see and access this file.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="current">Current password</Label>
-              <Input id="current" type="password" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="new">New password</Label>
-              <Input id="new" type="password" />
-            </div>
+            <UploadFilesEncrypted />
           </CardContent>
-          <CardFooter>
-            <Button>Save password</Button>
-          </CardFooter>
+          <CardFooter></CardFooter>
         </Card>
       </TabsContent>
     </Tabs>
