@@ -89,7 +89,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
     }
   }, []);
 
-  const handleUpload = async () => {
+  const handleUpload = async (address: any) => {
     setMessage("");
 
     if (!files || files.length === 0) {
@@ -99,7 +99,7 @@ export const Uploader: React.FC<UploaderConfigProps> = ({
     setTxProcessing(true);
 
     if (encryptData) {
-      const uploadedTx = await encryptAndUploadFile(files[0].file);
+      const uploadedTx = await encryptAndUploadFile(files[0].file, address);
       files[0].id = uploadedTx;
       files[0].isUploaded = true;
       files[0].previewURL = uploadedTx;
