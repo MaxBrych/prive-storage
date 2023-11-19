@@ -1,6 +1,4 @@
-"use client";
-import React, { useState } from "react";
-import { decryptFile } from "../../utils/lit";
+import React, { useEffect, useState } from "react";
 
 export default function FileEntry({
   id,
@@ -10,18 +8,30 @@ export default function FileEntry({
   address,
   image,
 }: any) {
-  const [decryptedImage, setDecryptedImage] = useState("");
-  const blob = new Blob([new Uint8Array(image.data)], { type: "image/jpeg" }); // adjust the MIME type if necessary
-  const url = URL.createObjectURL(blob);
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    if (image && typeof image === "string") {
+      // If image is a string, it's likely a URL
+      setImageUrl(image);
+    } else if (image && image.data) {
+      // If image has a data property, create a Blob
+      const blob = new Blob([new Uint8Array(image.data)], {
+        type: "image/jpeg",
+      }); // Adjust MIME type as necessary
+      const url = URL.createObjectURL(blob);
+      setImageUrl(url);
+    }
+  }, [image]);
 
   return (
-    <div className="metadata-entry">
+    <div className="text-xs">
       <p>ID: {id}</p>
       <p>Name: {name}</p>
       <p>Description: {description}</p>
       <p>Timestamp: {timestamp}</p>
       <p>Address: {address}</p>
-      <img src={image} alt={name} />
+      {imageUrl && <img src={imageUrl} alt={name} />}
     </div>
   );
 }
