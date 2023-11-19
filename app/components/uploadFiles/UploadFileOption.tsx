@@ -1,7 +1,7 @@
 "use client";
 // app/components/NFTForm.tsx
 import React, { ChangeEvent, useState } from "react";
-import { uploadFiles } from "../../utils/uploadFiles";
+import { uploadFiles } from "../../utils/uploadFilesEncrypted";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRef } from "react";
 import Link from "next/link";
@@ -51,7 +51,7 @@ export const UploadFiles = (props: any) => {
         // Convert the image data URL back to a file object
         const file = dataURLtoFile(image, name); // Implement this function to convert data URL to a file
 
-        const encryptedTx = await encryptAndUploadFile(file, address); // Now pass only the file
+        const encryptedTx = await encryptAndUploadFile(file); // Now pass only the file
 
         if (typeof encryptedTx === "string") {
           setMetadataUrl(encryptedTx);

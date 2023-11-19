@@ -60,7 +60,7 @@ async function encryptFile(file: File) {
 }
 
 // Uploads the encrypted File (with metadata) to Irys
-async function uploadFile(file: File): Promise<string> {
+async function uploadFile(file: File, address: string): Promise<string> {
   const irys = await getIrys();
 
   try {
@@ -87,6 +87,8 @@ async function uploadFile(file: File): Promise<string> {
         name: "Encrypted-File-Content-Type",
         value: file.type,
       },
+      { name: "AppName", value: "PriveStorage" },
+      { name: "address", value: address },
       {
         name: "Irys-Encrypted",
         value: "true",
@@ -106,9 +108,12 @@ async function uploadFile(file: File): Promise<string> {
 }
 
 // Encrypts and then uploads a File
-async function encryptAndUploadFile(file: File): Promise<string> {
+async function encryptAndUploadFile(
+  file: File,
+  address: string
+): Promise<string> {
   const encryptedData = await encryptFile(file);
-  return await uploadFile(encryptedData);
+  return await uploadFile(encryptedData, address);
 }
 
 // Helper functions for use in showing decrypted images

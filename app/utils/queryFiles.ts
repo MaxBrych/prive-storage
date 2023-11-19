@@ -1,20 +1,30 @@
 import Query from "@irys/query";
+import { decryptFile } from "../utils/lit"; // Import decryptFile function
+
 export interface MetadataEntry {
   image: string;
   name: string;
+  encrypted: boolean; // Add a flag to indicate if the entry is encrypted
 }
 
 export const queryFiles = async (
   address: string
 ): Promise<MetadataEntry[] | any> => {
-  async function fetchFileContent(transactionId: string) {
+  async function fetchFileContent(transactionId: string, encrypted: boolean) {
     try {
-      const response = await fetch(`https://node1.irys.xyz/${transactionId}`);
+      const url = `https://node1.irys.xyz/${transactionId}`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Network response was not ok ${response.statusText}`);
       }
-      const fileContent = await response.json();
-      return fileContent;
+      if (encrypted) {
+        // If the file is encrypted, decrypt it
+        const fileType = "application/json"; // Adjust as needed
+        return await decryptFile(url, fileType);
+      } else {
+        // If the file is not encrypted, just return its content
+        return await response.json();
+      }
     } catch (error) {
       console.error(
         "There has been a problem with your fetch operation:",
@@ -36,13 +46,17 @@ export const queryFiles = async (
 
     const metadataEntries = await Promise.all(
       results.map(async (result) => {
-        const fileContent = await fetchFileContent(result.id);
+        const isEncrypted = result.tags.some(
+          (tag) => tag.name === "Irys-Encrypted" && tag.value === "true"
+        );
+        const fileContent = await fetchFileContent(result.id, isEncrypted);
         return {
           id: result.id,
           timestamp: result.timestamp,
           address: result.address,
           name: fileContent.name,
           image: fileContent.image,
+          encrypted: isEncrypted,
         };
       })
     );
