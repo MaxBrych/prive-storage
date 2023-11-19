@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { decryptFile } from "../../utils/lit";
+import { FaLock } from "react-icons/fa";
+import Spinner from "../Spinner";
 
 export default function FileEntry({
   id,
@@ -7,22 +10,26 @@ export default function FileEntry({
   timestamp,
   address,
   image,
+  encryptedFileType,
+  encrypted,
 }: any) {
-  const [imageUrl, setImageUrl] = useState("");
+  const [decryptedImage, setDecryptedImage] = useState("");
+  const [isDecrypted, setIsDecrypted] = useState(false);
+  const [txProcessing, setTxProcessing] = useState(false);
 
-  useEffect(() => {
-    if (image && typeof image === "string") {
-      // If image is a string, it's likely a URL
-      setImageUrl(image);
-    } else if (image && image.data) {
-      // If image has a data property, create a Blob
-      const blob = new Blob([new Uint8Array(image.data)], {
-        type: "image/jpeg",
-      }); // Adjust MIME type as necessary
-      const url = URL.createObjectURL(blob);
-      setImageUrl(url);
+  const handleDecrypt = async () => {
+    if (!encrypted || !id) return;
+
+    setTxProcessing(true);
+    try {
+      const decryptedData = await decryptFile(id, encryptedFileType); // Use the file's ID for decryption
+      setDecryptedImage(decryptedData);
+      setIsDecrypted(true);
+    } catch (error) {
+      console.error("Error decrypting file:", error);
     }
-  }, [image]);
+    setTxProcessing(false);
+  };
 
   return (
     <div className="text-xs">
@@ -31,7 +38,17 @@ export default function FileEntry({
       <p>Description: {description}</p>
       <p>Timestamp: {timestamp}</p>
       <p>Address: {address}</p>
-      {imageUrl && <img src={imageUrl} alt={name} />}
+      {encrypted && !isDecrypted ? (
+        <button
+          onClick={handleDecrypt}
+          disabled={txProcessing}
+          className="px-4 py-2 mt-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+        >
+          {txProcessing ? <Spinner /> : <FaLock />}
+        </button>
+      ) : (
+        <img src={decryptedImage || image} alt={name} />
+      )}
     </div>
   );
 }

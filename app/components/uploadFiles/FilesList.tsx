@@ -23,15 +23,15 @@ const FilesList = ({ address }: any) => {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       {metadataEntries.map((entry, index) => (
         <div key={index} className="p-4 border rounded-lg shadow">
-          <FileEntry {...entry} />
-          {entry.encrypted && (
-            <button className="px-4 py-2 mt-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
-              Decrypt
-            </button>
-          )}
+          <FileEntry
+            {...entry}
+            encrypted={entry.encrypted}
+            encryptedFileType={entry.encryptedFileType}
+            id={entry.id}
+          />
         </div>
       ))}
     </div>

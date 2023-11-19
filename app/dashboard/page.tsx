@@ -17,7 +17,7 @@ async function getData(address: string): Promise<Files[]> {
 export default function Dashboard() {
   const [refreshData, setRefreshData] = useState(false);
   const [data, setData] = useState<Files[]>([]);
-  const [activeTab, setActiveTab] = useState("filesList"); // State to track the active tab
+  const [activeTab, setActiveTab] = useState("dataTable");
   const address = useAddress();
 
   useEffect(() => {
@@ -40,18 +40,13 @@ export default function Dashboard() {
         <Sidebar />
       </div>
       <div className="flex flex-col items-start justify-start w-full px-4 pt-32 md:px-8">
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="flex mb-4 space-x-2">
-            <TabsTrigger value="filesList">Files List</TabsTrigger>
-            <TabsTrigger value="dataTable">Data Table</TabsTrigger>
-          </TabsList>
-          <TabsContent value="filesList">
-            <FilesList address={address} />
-          </TabsContent>
-          <TabsContent value="dataTable">
-            <DataTable columns={columns} data={data} />
-          </TabsContent>
-        </Tabs>
+        <DataTable
+          columns={columns}
+          data={data}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
+        {activeTab === "filesList" && <FilesList address={address} />}
       </div>
     </div>
   );

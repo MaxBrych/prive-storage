@@ -12,8 +12,15 @@ const MetadataList = () => {
     const fetchMetadata = async () => {
       const results = await queryMetadata();
       if (results) {
-        // Check if results is defined before calling setMetadataEntries
-        setMetadataEntries(results);
+        const metadataEntriesWithEncryption: MetadataEntry[] = results.map(
+          (entry) => ({
+            ...entry,
+            encrypted: false,
+            encryptedFileType: "", // Add the missing property
+            id: "", // Add the missing property
+          })
+        );
+        setMetadataEntries(metadataEntriesWithEncryption);
       }
       setIsLoading(false);
     };
