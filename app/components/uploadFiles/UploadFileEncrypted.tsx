@@ -63,7 +63,9 @@ export const UploadFiles = (props: any) => {
         console.error("Error during upload:", error);
       }
     }
-    props.onUploadComplete();
+    if (typeof props.onUploadComplete === "function") {
+      props.onUploadComplete();
+    }
   };
 
   const onUnifiedAccessControlConditionsSelected = async (output: any) => {
