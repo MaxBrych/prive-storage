@@ -110,7 +110,8 @@ async function uploadFile(file: File, address: string): Promise<string> {
 // Encrypts and then uploads a File
 async function encryptAndUploadFile(
   file: File,
-  address: string
+  address: string,
+  accessControlConditions: any
 ): Promise<string> {
   const encryptedData = await encryptFile(file);
   return await uploadFile(encryptedData, address);
