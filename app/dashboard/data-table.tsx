@@ -30,6 +30,7 @@ import UploadModal from "../components/uploadFiles/UploadModal";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import FilesList from "../components/uploadFiles/FilesList";
 import { useAddress } from "@thirdweb-dev/react";
+import { LayoutGrid, TableProperties } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -81,9 +82,13 @@ export function DataTable<TData, TValue>({
           onValueChange={setActiveTab}
           className="w-full"
         >
-          <TabsList className="flex mb-4 space-x-2">
-            <TabsTrigger value="dataTable">Data Table</TabsTrigger>
-            <TabsTrigger value="filesList">Files List</TabsTrigger>
+          <TabsList className="flex p-1 mb-4 space-x-2 rounded-lg bg-zinc-100 ">
+            <TabsTrigger value="dataTable" className="bg-white rounded-md">
+              <TableProperties />
+            </TabsTrigger>
+            <TabsTrigger value="filesList" className="bg-white rounded-md">
+              <LayoutGrid />
+            </TabsTrigger>
           </TabsList>
         </Tabs>
         <UploadModal />
