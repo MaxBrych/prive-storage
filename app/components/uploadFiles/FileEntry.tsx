@@ -34,8 +34,7 @@ export default function FileEntry({
   return (
     <div className="text-xs">
       {/*<p>ID: {id}</p>*/}
-      <p>Name: {name}</p>
-      <p>Description: {description}</p>
+
       {/*  <p>Timestamp: {timestamp}</p>*/}
       {/*<p>Address: {address}</p> */}
       {encrypted && !isDecrypted ? (
@@ -49,6 +48,7 @@ export default function FileEntry({
       ) : (
         <img src={decryptedImage || image} alt={name} />
       )}
+      <h1 className="font-bold text-md">{name}</h1>
     </div>
   );
 }
