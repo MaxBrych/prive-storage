@@ -32,7 +32,7 @@ export default function Home() {
           <Link
             href="/dashboard"
             type="button"
-            className="-m-2.5 inline-flex items-center gap-2 rounded-full px-3 bg-zinc-100 justify-center text-sm py-2.5 text-gray-700"
+            className="-m-2.5 mt-2 inline-flex items-center gap-2 rounded-lg px-3 bg-zinc-100 justify-center text-sm py-2.5 text-gray-700"
           >
             Dashboard
             <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
