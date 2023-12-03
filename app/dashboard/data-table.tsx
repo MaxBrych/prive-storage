@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({
           onValueChange={setActiveTab}
           className="w-full"
         >
-          <TabsList className="flex p-1 mb-4 space-x-2 rounded-lg bg-zinc-100 ">
+          <TabsList className="flex justify-center mb-4 space-x-2 rounded-lg ">
             <TabsTrigger value="dataTable" className="bg-white rounded-md">
               <TableProperties />
             </TabsTrigger>

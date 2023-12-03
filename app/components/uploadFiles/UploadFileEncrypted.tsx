@@ -1,11 +1,10 @@
 "use client";
 import React, { ChangeEvent, useState } from "react";
+import { uploadFiles } from "../../utils/uploadFiles";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRef } from "react";
 import Link from "next/link";
-import ShareModal from "lit-share-modal-v3";
-import { encryptAndUploadFile } from "../../utils/lit"; // Ensure correct import paths
-import { uploadFiles } from "@/app/utils/uploadFiles";
+import { encryptAndUploadFile } from "../../utils/lit";
 
 export const UploadFiles = (props: any) => {
   const [encryptData, setEncryptData] = useState(true);
@@ -14,7 +13,6 @@ export const UploadFiles = (props: any) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [metadataUrl, setMetadataUrl] = useState("");
-  const [showShareModal, setShowShareModal] = useState(false);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -48,9 +46,22 @@ export const UploadFiles = (props: any) => {
     const metadata = { name, description, image };
 
     if (encryptData) {
-      setShowShareModal(true);
+      try {
+        // Convert the image data URL back to a file object
+        const file = dataURLtoFile(image, name); // Implement this function to convert data URL to a file
+
+        const encryptedTx = await encryptAndUploadFile(file, address); // Now pass only the file
+
+        if (typeof encryptedTx === "string") {
+          setMetadataUrl(encryptedTx);
+          console.log("Encrypted metadata uploaded with URL:", encryptedTx);
+        } else {
+          console.error("Failed to obtain encrypted transaction URL");
+        }
+      } catch (error) {
+        console.error("Error during encryption and upload:", error);
+      }
     } else {
-      // Non-encrypted file upload logic
       try {
         const url = await uploadFiles(metadata, address);
         if (typeof url === "string") {
@@ -63,31 +74,8 @@ export const UploadFiles = (props: any) => {
         console.error("Error during upload:", error);
       }
     }
-    if (typeof props.onUploadComplete === "function") {
-      props.onUploadComplete();
-    }
-  };
 
-  const onUnifiedAccessControlConditionsSelected = async (output: any) => {
-    // Encrypt and upload the file with the selected conditions
-    try {
-      const file = dataURLtoFile(image, name);
-      const encryptedTx = await encryptAndUploadFile(
-        file,
-        address || "",
-        output
-      );
-
-      if (typeof encryptedTx === "string") {
-        setMetadataUrl(encryptedTx);
-        console.log("Encrypted metadata uploaded with URL:", encryptedTx);
-      } else {
-        console.error("Failed to obtain encrypted transaction URL");
-      }
-    } catch (error) {
-      console.error("Error during encryption and upload:", error);
-    }
-    setShowShareModal(false);
+    props.onUploadComplete();
   };
 
   // Function to convert a data URL to a file object
@@ -155,18 +143,6 @@ export const UploadFiles = (props: any) => {
           </>
         )}
       </div>
-      {showShareModal && (
-        <div className={"lit-share-modal"}>
-          <ShareModal
-            onClose={() => {
-              setShowShareModal(false);
-            }}
-            onUnifiedAccessControlConditionsSelected={
-              onUnifiedAccessControlConditionsSelected
-            }
-          />
-        </div>
-      )}
     </>
   );
 };
