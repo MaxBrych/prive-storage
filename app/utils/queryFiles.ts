@@ -19,7 +19,7 @@ export const queryFiles = async (
       }
       if (encrypted) {
         // If the file is encrypted, decrypt it
-        const fileType = "application/json"; // Adjust as needed
+        const fileType = "application/json";
         return await decryptFile(url, fileType);
       } else {
         // If the file is not encrypted, just return its content

@@ -22,11 +22,11 @@ export default function Home() {
         </div>
         <div className="text-start">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Decentralized Permanent Data Storage
+            Permanent File Storage onchain
           </h1>
           <p className="mt-6 mb-4 text-lg leading-8 text-gray-600">
-            Store your data on arweave with a provenance and permanent
-            avalability
+            Store your images on arweave with ease and ensure its provenance and
+            permanent avalability
           </p>
           <Link
             href="/dashboard"

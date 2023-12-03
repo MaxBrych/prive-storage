@@ -28,12 +28,10 @@ export function Providers({ children }: Props) {
         activeChain="polygon"
         clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID!}
         supportedWallets={[
-          smartWallet(metamaskWallet(), smartWalletOptions),
+          metamaskWallet({ recommended: true }),
           coinbaseWallet({ recommended: true }),
-
-          smartWallet(walletConnect(), smartWalletOptions),
-          smartWallet(localWallet(), smartWalletOptions),
-          smartWallet(embeddedWallet(), smartWalletOptions),
+          walletConnect(),
+          localWallet(),
         ]}
       >
         {children}
