@@ -2,6 +2,7 @@ import Image from "next/image";
 import UploadFiles from "./components/uploadFiles/UploadFile";
 import Link from "next/link";
 import { UploadTabs } from "./components/UploadTabs";
+import { ArrowUpRight } from "lucide-react";
 
 export default function Home() {
   return (
@@ -30,10 +31,11 @@ export default function Home() {
           </p>
           <Link
             href="/dashboard"
-            className="inline-block h-10 px-6 py-3 text-blue-600 bg-blue-100 rounded-md hover:bg-blue-200"
+            type="button"
+            className="-m-2.5 inline-flex items-center gap-2 rounded-full px-3 bg-zinc-100 justify-center text-sm py-2.5 text-gray-700"
           >
-            {" "}
             Dashboard
+            <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
           </Link>
         </div>
       </div>

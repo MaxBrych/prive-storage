@@ -28,7 +28,7 @@ export default function Header() {
               <h1 className="text-xl font-semibold text-center">Storage</h1>
             </Link>
           </div>
-          <div className="flex lg:hidden">
+          <div className="flex">
             <ConnectWallet
               className="h-5 text-xs"
               btnTitle={"Einloggen"}
@@ -38,17 +38,6 @@ export default function Header() {
               modalTitleIconUrl={""}
               theme={"light"}
             />
-          </div>
-
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link
-              href="/dashboard"
-              type="button"
-              className="-m-2.5 inline-flex items-center gap-2 rounded-full px-2 bg-zinc-100 justify-center text-sm py-2.5 text-gray-700"
-            >
-              Dashboard
-              <ArrowUpRight className="w-6 h-6" aria-hidden="true" />
-            </Link>
           </div>
         </nav>
       </header>
