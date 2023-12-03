@@ -10,17 +10,6 @@ export default function Sidebar() {
         <div>
           <div className="h-full"></div>
           <FundWithdraw node="https://node1.irys.xyz" currency="matic" />
-          <div className="flex flex-col justify-center w-full py-4 mt-6 border border-b-0 border-l-0 border-r-0 border-t-zinc-100">
-            <ConnectWallet
-              className="h-5 text-xs"
-              btnTitle={"Einloggen"}
-              modalTitle={"Einloggen"}
-              modalSize={"compact"}
-              welcomeScreen={{}}
-              modalTitleIconUrl={""}
-              theme={"light"}
-            />
-          </div>
         </div>
       </div>
     </div>
