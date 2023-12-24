@@ -7,9 +7,9 @@ import { ArrowUpRight } from "lucide-react";
 export default function Home() {
   return (
     <div className="flex justify-center w-full min-h-screen">
-      <div className="flex flex-col max-w-6xl gap-4 bg-white md:flex-row">
+      <div className="flex flex-col max-w-6xl gap-4 px-4 bg-white md:flex-row">
         {/* Left Column */}
-        <div className="w-full px-4 py-32 mx-auto md:px-8 md:max-w-1/2 sm:py-48 lg:py-56">
+        <div className="w-full py-32 mx-auto md:px-8 md:max-w-1/2 sm:py-48 lg:py-56">
           <div className="hidden sm:mb-8 sm:flex sm:justify-start">
             <div className="relative px-3 py-1 text-sm leading-6 text-gray-600 rounded-full ring-1 ring-gray-900/10 hover:ring-gray-900/20">
               Store files with provanance on Iry.{" "}
