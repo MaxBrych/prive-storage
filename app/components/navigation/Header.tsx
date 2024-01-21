@@ -25,9 +25,7 @@ export default function Header() {
               className="-m-1.5 p-1.5 flex flex-row justify-center items-center gap-2"
             >
               <Logo />
-              <h1 className="text-xl font-semibold text-center">
-                Prive Storage
-              </h1>
+              <h1 className="text-2xl font-semibold text-center">Prive</h1>
             </Link>
           </div>
           <div className="flex">
