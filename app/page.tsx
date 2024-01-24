@@ -15,7 +15,7 @@ export default function Home() {
               Learn more about Irys.{" "}
               <a
                 href="https://irys.xyz/"
-                className="font-semibold text-cyan-500"
+                className="font-semibold text-cyan-600"
               >
                 <span className="absolute inset-0" aria-hidden="true" />
                 Read more <span aria-hidden="true">&rarr;</span>
